@@ -1,7 +1,7 @@
 package main
 
 import (
-	"db_worker/app"
+	"DBWorker/app"
 	"flag"
 	"fmt"
 	"strings"

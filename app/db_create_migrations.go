@@ -1,8 +1,8 @@
 package app
 
 import (
+	"DBWorker/utils"
 	"bitbucket.org/liamstask/goose/lib/goose"
-	"db_worker/utils"
 	"time"
 )
 
@@ -10,7 +10,7 @@ func (db *DBConfig) DBCreateMigration(dir, fileName string) (string, error) {
 	useDir := func() (string, error) {
 
 		if dir != "" {
-			return utils.GetCurrDir()
+			return utils.GetCurrentDir()
 		}
 		return dir, nil
 	}
