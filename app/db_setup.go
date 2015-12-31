@@ -4,7 +4,7 @@ package app
 // 	"bitbucket.org/liamstask/goose/lib/goose"
 // )
 
-func (db *DBConfig) DB_Setup(args ...interface{}) (err error) {
+func (db *DBConfig) DB_Setup(tokenValues ...interface{}) (err error) {
 	//replace the tokens with the args
 
 	//run it against psql client
