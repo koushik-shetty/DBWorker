@@ -2,9 +2,9 @@ package main
 
 import (
 	"DBWorker/app"
+	"DBWorker/utils"
 	"flag"
 	"fmt"
-	"os"
 	"strings"
 )
 
@@ -30,25 +30,23 @@ func main() {
 		fmt.Println("Error : only sql files are allowed")
 		return
 	}
-	fmt.Printf("no of args:%d", len(os.Args))
 
-	inputFile := (*file)[:len()]
 	db := app.DefaultDBConfig()
 
 	switch *operation {
 	case setup:
-		app.DB_Setup(utils.File{
-			name: *file,
-			dir:  *dir,
-		}, flag.Args()...)
-
+		fileData := utils.NewFile(*file, *dir)
+		db.DB_Setup(fileData, flag.Args())
+		return
 	case teardown:
 	case up:
 	case down:
+
 	case migration:
 		tmpFile := *file
-		ipFile := tmpFile(tmpFile, ".sql", "", -1)
-		createdFile, err := db.DBCreateMigration(*dir, ipFile)
+		ipFile := strings.Replace(tmpFile, ".sql", "", -1)
+		fileData := utils.NewFile(ipFile, *dir)
+		createdFile, err := db.DBCreateMigration(fileData)
 
 		if err != nil {
 			fmt.Println("Error creating migration:", err)
@@ -56,6 +54,7 @@ func main() {
 		}
 
 		fmt.Println("Created Migration file ", createdFile)
+
 	default:
 		fmt.Println("Unsupported operation:", *operation)
 		return

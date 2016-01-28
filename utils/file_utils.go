@@ -5,19 +5,33 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"regexp"
 )
 
 type GetData func(int) ([]byte, *lib.Error)
 
 type FileOper interface {
-	GetCurrentDir() (string, *lib.Error)
-	GetApplicationName() (string, *lib.Error)
+	Name() string
+	Dir() string
 }
 
 type File struct {
 	name string
 	dir  string
+}
+
+func (f *File) Name() string {
+	return f.name
+}
+
+func (f *File) Dir() string {
+	return f.dir
+}
+
+func NewFile(name, dir string) *File {
+	return &File{
+		name: name,
+		dir:  dir,
+	}
 }
 
 func GetApplicationDir() (*File, *lib.Error) {
@@ -59,29 +73,11 @@ func NewFileContents(noOfContents int, tokens []string, data []byte) *FileConten
 	}
 }
 
-func GetFileContents(file File) (string, *lib.Error) {
-	fileBytes, err := ioutil.ReadFile(file.dir + file.name)
+func GetFileContents(file FileOper) (string, *lib.Error) {
+	fileBytes, err := ioutil.ReadFile(file.Dir() + file.Name())
 
 	if err != nil {
-		return nil, lib.ToLibError(err, lib.FileError, "get file contents")
+		return "", lib.ToLibError(err, lib.FileError, "get file contents")
 	}
 	return string(fileBytes), nil
-
-	// regex, err := regexp.Compile(":[a-zA-Z][a-zA-Z0-9]+")
-	// if err != nil {
-	// 	return nil, lib.ToLibError(err, lib.RegexError, "get file contents")
-	// }
-	// noOfContents, tokens := GetAllTokens(string(fileBytes), regex)
-	// contents := NewFileContents(noOfContents, tokens, fileBytes)
-	// return contents, nil
-}
-
-func GetAllTokens(src string, reg *regexp.Regexp) (int, []string) {
-	tokens := reg.FindAllString(src, -1)
-
-	for i, value := range tokens {
-		tokens[i] = value[1:]
-	}
-	noOfTokens := len(tokens)
-	return noOfTokens, tokens
 }

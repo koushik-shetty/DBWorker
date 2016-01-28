@@ -4,12 +4,11 @@ import (
 	"fmt"
 	r "regexp"
 	"strings"
-	"time"
 
 	"DBWorker/lib"
 	"DBWorker/utils"
 
-	"bitbucket.org/liamstask/goose/lib/goose"
+	// "bitbucket.org/liamstask/goose/lib/goose"
 )
 
 const TokenExpr = "^[a-zA-Z0-9]+:[a-zA-Z0-9]+"
@@ -22,11 +21,10 @@ type Pairs []string
 
 type Tokens map[string]string
 
-func (db *DBConfig) DB_Setup(file utils.File, tokenPairs Pairs) (err *lib.Error) {
-	//replace the tokens with the args
-
+func (db *DBConfig) DB_Setup(file utils.FileOper, tokenPairs Pairs) (err *lib.Error) {
+	//prepare file
 	fileContents, err := formatFileContents(file, tokenPairs)
-	fmt.Printf("print:%v", fileContents)
+	fmt.Printf("contents: %v\n", fileContents)
 
 	if err != nil {
 		return err
@@ -39,18 +37,18 @@ func (db *DBConfig) DB_Setup(file utils.File, tokenPairs Pairs) (err *lib.Error)
 }
 
 func verifyPair(pair string) bool {
-	matched, _ := r.Match(TokenExpr, pair)
+	matched, _ := r.Match(TokenExpr, []byte(pair))
 	return matched
 }
 
 func makeTokens(pairs Pairs) (tokens Tokens, err *lib.Error) {
-	expr, _ := r.Compile("[a-zA-Z0-9]")
+	tokens = make(Tokens)
 	for _, val := range pairs {
 		if verifyPair(val) {
 			token := strings.Split(val, ":")
 			tokens[token[0]] = token[1]
 		} else {
-			err = lib.NewError(lib.TokenErrorr, "db setup", "token syntax was incorrect")
+			err = lib.NewError(lib.TokenError, "db setup", "token syntax was incorrect")
 			tokens = nil
 			return
 		}
@@ -65,12 +63,15 @@ func stringFormat(src string, tokens Tokens) string {
 	return src
 }
 
-func formatFileContents(file utils.File, tokenPairs Pairs) (fileContents string, err *lib.Error) {
+func formatFileContents(file utils.FileOper, tokenPairs Pairs) (fileContents string, err *lib.Error) {
 	fileContents, err = utils.GetFileContents(file)
 	if err != nil {
 		return
 	}
 
 	tokens, err := makeTokens(tokenPairs)
-	return stringFormat(fileContents, tokens)
+	if err != nil {
+		return "", err
+	}
+	return stringFormat(fileContents, tokens), nil
 }
