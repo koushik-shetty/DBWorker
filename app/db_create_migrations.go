@@ -1,26 +1,27 @@
 package app
 
 import (
+	"DBWorker/lib"
 	"DBWorker/utils"
 	"bitbucket.org/liamstask/goose/lib/goose"
 	"time"
 )
 
-func (db *DBConfig) DBCreateMigration(dir, fileName string) (string, error) {
-	useDir := func() (string, error) {
-
-		if dir != "" {
-			return utils.GetCurrentDir()
+func (db *DBConfig) DBCreateMigration(file FileOper) (string, *lib.Error) {
+	folder := ""
+	err := lib.EmptyError()
+	if dir == "" {
+		folder, err = file.GetCurrentDir()
+		if err != nil {
+			return "", err
 		}
-		return dir, nil
 	}
 
-	dir, err := useDir()
+	createdFile, err := goose.CreateMigration(file.Name, "sql", folder, time.Now())
 
 	if err != nil {
-		return "", err
+		return "", lib.ToLibError(err, lib.FileCreateError, "create migration file")
 	}
 
-	createdFile, err := goose.CreateMigration(fileName, "sql", dir, time.Now())
-	return createdFile, err
+	return createdFile, nil
 }

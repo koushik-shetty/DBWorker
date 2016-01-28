@@ -2,29 +2,40 @@ package lib
 
 import (
 	"fmt"
-	"net/http"
-	"strings"
+)
 
-	"mct-git.sb.mct.local/periscope/performanceanalytics/constants"
-	pptMsg "mct-git.sb.mct.local/periscope/performanceanalytics/messages/ppt_service_messages"
+const (
+	DirError        = "1"
+	FileError       = "2"
+	RegexError      = "3"
+	FileCreateError = "4"
+	TokenError      = "5"
 )
 
 type Error struct {
-	Code        int
-	Source      string
-	Description string
+	code        string
+	source      string
+	description string
 }
 
-func NewError(code int, source, description string) *Error {
+func NewError(code, source, description string) *Error {
 	return &Error{
-		Code:        code,
-		Source:      source,
-		Description: description,
+		code:        code,
+		source:      source,
+		description: description,
 	}
 }
 
-func (e error) ToError(code int, source string) *Error {
-	return NewError(e.Error(), userCode)
+func EmptyError() *Error {
+	return NewError("0", "", "")
+}
+
+func (e *Error) String() string {
+	return fmt.Sprintf("code=%s\nsource=%s\ndescription=%s", e.Code(), e.Source(), e.Description())
+}
+
+func ToLibError(err error, code, source string) *Error {
+	return NewError(code, source, err.Error())
 }
 
 func (err *Error) Description() string {
@@ -32,11 +43,11 @@ func (err *Error) Description() string {
 }
 
 func (err *Error) Code() string {
-	return err.userCode.code
+	return err.code
 }
 
 func (err *Error) Source() string {
-	return err.Source
+	return err.source
 }
 
 func (err *Error) AppendDescription(description string) {

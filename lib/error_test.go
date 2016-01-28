@@ -3,12 +3,8 @@ package lib_test
 import (
 	"testing"
 
-	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"
-	"mct-git.sb.mct.local/periscope/performanceanalytics/constants"
 	"mct-git.sb.mct.local/periscope/performanceanalytics/lib"
-	msg "mct-git.sb.mct.local/periscope/performanceanalytics/messages"
-	pptMsg "mct-git.sb.mct.local/periscope/performanceanalytics/messages/ppt_service_messages"
 )
 
 func TestError(t *testing.T) {

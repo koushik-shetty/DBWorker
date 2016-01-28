@@ -2,54 +2,86 @@ package utils
 
 import (
 	"DBWorker/lib"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
 )
 
-type GetData func(int) ([]byte, err)
+type GetData func(int) ([]byte, *lib.Error)
 
-type DiskOper interface {
+type FileOper interface {
 	GetCurrentDir() (string, *lib.Error)
 	GetApplicationName() (string, *lib.Error)
 }
 
-type DiskIO struct {
-	filename string
-	dir      string
+type File struct {
+	name string
+	dir  string
 }
 
-func GetApplicationDir() *Dir {
-	return &DiskIO{
-		filename: filepath.Abs(filepath.Base(os.Args[0])),
-		dir:      filepath.Abs(filepath.Dir(os.Args[0])),
+func GetApplicationDir() (*File, *lib.Error) {
+	filename, err := filepath.Abs(filepath.Base(os.Args[0]))
+	if err != nil {
+		return nil, lib.ToLibError(err, lib.DirError, "application directory")
 	}
+
+	baseDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		return nil, lib.ToLibError(err, lib.DirError, "application directory")
+	}
+
+	return &File{
+		name: filename,
+		dir:  baseDir,
+	}, nil
 }
 
-func (d *Dir) GetCurrentDir() (string, *lib.Error) {
+func GetCurrentDir() (string, *lib.Error) {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-
-	return
+	if err != nil {
+		return "", lib.ToLibError(err, lib.DirError, "CurrentDirectory")
+	}
+	return dir, nil
 }
 
 type FileContents struct {
-	NoOfTokens int
-	Tokens     []string
-	Data       []byte
+	noOfTokens int
+	tokens     []string
+	data       []byte
 }
 
-func GetFileContents(filename string) (*FileContents, *lib.Error) {
-	file, err := ioutil.ReadFile(filename)
+func NewFileContents(noOfContents int, tokens []string, data []byte) *FileContents {
+	return &FileContents{
+		noOfTokens: noOfContents,
+		tokens:     tokens,
+		data:       data,
+	}
+}
+
+func GetFileContents(file File) (string, *lib.Error) {
+	fileBytes, err := ioutil.ReadFile(file.dir + file.name)
 
 	if err != nil {
-		return nil, *lib.ToError
+		return nil, lib.ToLibError(err, lib.FileError, "get file contents")
 	}
-	contents := &FileContents{}
-	return nil, err
+	return string(fileBytes), nil
+
+	// regex, err := regexp.Compile(":[a-zA-Z][a-zA-Z0-9]+")
+	// if err != nil {
+	// 	return nil, lib.ToLibError(err, lib.RegexError, "get file contents")
+	// }
+	// noOfContents, tokens := GetAllTokens(string(fileBytes), regex)
+	// contents := NewFileContents(noOfContents, tokens, fileBytes)
+	// return contents, nil
 }
 
-func (fc *FileContents) GetAllTokens(src string, reg regexp.Regexp) {
+func GetAllTokens(src string, reg *regexp.Regexp) (int, []string) {
 	tokens := reg.FindAllString(src, -1)
-	fc.noOfTokens = len(tokens)
-	fc.tokens = tokens
+
+	for i, value := range tokens {
+		tokens[i] = value[1:]
+	}
+	noOfTokens := len(tokens)
+	return noOfTokens, tokens
 }
