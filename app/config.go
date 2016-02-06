@@ -52,14 +52,14 @@ func DefaultDBConfig() *DBConfig {
 	return &DBConfig{
 		driver:   "postgres",
 		hostname: "localhost",
-		dbname:   "koteldb",
-		schema:   "public",
+		dbname:   "TestDB",
+		schema:   "sc",
 		username: "postgres",
 		password: "postgres",
 	}
 }
 func (dbconf *DBConfig) DBConnectionString() string {
-	return fmt.Sprintf("host=%s dbname=%s user=%s password=%s sslmode=disable", dbconf.HostName(), dbconf.DBName(), dbconf.UserName(), dbconf.Password())
+	return fmt.Sprintf("host=%s dbname=%s search_path=%s user=%s password=%s sslmode=disable", dbconf.HostName(), dbconf.DBName(), dbconf.Schema(), dbconf.UserName(), dbconf.Password())
 }
 
 func NewDBConfig(host, dbname, schema, username, password string) *DBConfig {

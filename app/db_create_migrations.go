@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func (db *DBConfig) DBCreateMigration(file u.FileOper) (string, *lib.Error) {
+func DBCreateMigration(file u.FileOper) (string, *lib.Error) {
 	folder := file.Dir()
 
 	if folder == "" {
