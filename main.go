@@ -31,14 +31,20 @@ func main() {
 		return
 	}
 
-	db := app.DefaultDBConfig()
+	dbc := app.DefaultDBConfig()
+	db, err := app.NewDatabase(dbc)
+	if err != nil {
+		fmt.Printf("Failed to connect ot db : %v", err)
+		return
+	}
 
 	switch *operation {
 	case setup:
 		fileData := utils.NewFile(*file, *dir)
-		db.DB_Setup(fileData, flag.Args())
+		db.DB_Setup(fileData, utils.ToPairs(flag.Args()))
 		return
 	case teardown:
+
 	case up:
 	case down:
 
@@ -46,7 +52,7 @@ func main() {
 		tmpFile := *file
 		ipFile := strings.Replace(tmpFile, ".sql", "", -1)
 		fileData := utils.NewFile(ipFile, *dir)
-		createdFile, err := db.DBCreateMigration(fileData)
+		createdFile, err := app.DBCreateMigration(fileData)
 
 		if err != nil {
 			fmt.Println("Error creating migration:", err)

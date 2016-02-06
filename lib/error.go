@@ -31,7 +31,7 @@ func EmptyError() *Error {
 }
 
 func (e *Error) String() string {
-	return fmt.Sprintf("code=%s\nsource=%s\ndescription=%s", e.Code(), e.Source(), e.Description())
+	return fmt.Sprintf("code=%s,source=%s,description=%s", e.Code(), e.Source(), e.Description())
 }
 
 func ToLibError(err error, code, source string) *Error {
