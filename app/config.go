@@ -1,74 +1,38 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+
+	"DBWorker/lib"
 )
 
-type DBConfig struct {
-	driver   string
-	hostname string
-	dbname   string
-	schema   string
-	username string
-	password string
+type Config struct {
+	dbconfig *DBConfig
 }
 
-func (dbConf *DBConfig) Driver() string {
-	return dbConf.driver
+type configJSON struct {
+	dbConfig DBConfig
 }
 
-func (dbconf *DBConfig) HostName() string {
-	return dbconf.hostname
-}
-
-func (dbconf *DBConfig) DBName() string {
-	return dbconf.dbname
-}
-
-func (dbconf *DBConfig) Schema() string {
-	return dbconf.schema
-}
-
-func (dbconf *DBConfig) UserName() string {
-	return dbconf.username
-}
-
-func (dbconf *DBConfig) Password() string {
-	return dbconf.password
-}
-
-// func DefaultDBConfig() *DBConfig {
-// 	return &DBConfig{
-// 		driver:   "postgres",
-// 		hostname: "localhost",
-// 		dbname:   "koteldb",
-// 		schema:   "wall",
-// 		username: "pilgrim",
-// 		password: "western_wall",
-// 	}
-// }
-
-func DefaultDBConfig() *DBConfig {
-	return &DBConfig{
-		driver:   "postgres",
-		hostname: "localhost",
-		dbname:   "TestDB",
-		schema:   "sc",
-		username: "postgres",
-		password: "postgres",
+func LoadConfig(file string) (*Config, *lib.Error) {
+	file, err := ioutil.ReadAll()
+	if err != nil {
+		return lib.ToLibError(err, lib.FileError, "LoadConfig")
 	}
-}
-func (dbconf *DBConfig) DBConnectionString() string {
-	return fmt.Sprintf("host=%s dbname=%s search_path=%s user=%s password=%s sslmode=disable", dbconf.HostName(), dbconf.DBName(), dbconf.Schema(), dbconf.UserName(), dbconf.Password())
+c:
+	&configJSON{}
+	err = json.Unmarshal(file, c)
+	if err != nil {
+		return lib.ToLibError(err, lib.JSONError)
+	}
+	return jsonToConfig(c)
+
 }
 
-func NewDBConfig(host, dbname, schema, username, password string) *DBConfig {
-	return &DBConfig{
-		driver:   "postgres",
-		hostname: host,
-		dbname:   dbname,
-		schema:   schema,
-		username: username,
-		password: password,
+func jsonToConfig(c *configJSON) *Config {
+	return &Config{
+		dbconfig: &c.dbConfig,
 	}
 }

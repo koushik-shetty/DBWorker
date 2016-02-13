@@ -1,0 +1,11 @@
+{
+	"database":{
+		"driver":"postgres",
+		"hostname" : "localhost",
+		"dbname"  : "Kotel",
+		"schema"   : "wall",
+		"username" : "pilgrim",
+		"password" : "kvitelach",
+	},
+
+}
