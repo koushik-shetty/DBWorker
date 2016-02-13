@@ -17,6 +17,7 @@ const (
 )
 
 var (
+	config    = flag.String("config", "config.json", "config file for the application to run")
 	operation = flag.String("work", "", `-work can have : ["setup","teardown","up","down","genmigration"] values`)
 	file      = flag.String("f", "", "Script file to use for the operation")
 	dir       = flag.String("dir", "", "Script file directory")
@@ -25,23 +26,27 @@ var (
 
 func main() {
 	flag.Parse()
-
+	if err := readConfig(*config); err != nil {
+		fmt.Printf()
+	}
 	if !strings.HasSuffix(*file, ".sql") {
 		fmt.Println("Error : only sql files are allowed")
 		return
 	}
-
 	dbc := app.DefaultDBConfig()
 	db, err := app.NewDatabase(dbc)
 	if err != nil {
-		fmt.Printf("Failed to connect ot db : %v", err)
+		fmt.Printf("Failed to connect to db : %v", err)
 		return
 	}
 
 	switch *operation {
 	case setup:
 		fileData := utils.NewFile(*file, *dir)
-		db.DB_Setup(fileData, utils.ToPairs(flag.Args()))
+		e := db.DB_Setup(fileData, utils.ToPairs(flag.Args()))
+		if !e.IsEmpty() {
+			fmt.Printf("error seting up database: %v", e)
+		}
 		return
 	case teardown:
 

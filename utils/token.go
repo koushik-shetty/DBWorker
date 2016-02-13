@@ -7,7 +7,7 @@ import (
 	"DBWorker/lib"
 )
 
-const TokenExpr = "^[a-zA-Z0-9]+:[a-zA-Z0-9]+"
+const TokenExpr = "^[a-zA-Z0-9_]+:[a-zA-Z0-9_]+"
 
 type Pair string
 type Pairs []Pair

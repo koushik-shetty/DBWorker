@@ -10,6 +10,8 @@ const (
 	RegexError      = "3"
 	FileCreateError = "4"
 	TokenError      = "5"
+	DBError         = "6"
+	JSONError       = "7"
 )
 
 type Error struct {
@@ -30,11 +32,18 @@ func EmptyError() *Error {
 	return NewError("0", "", "")
 }
 
+func (e *Error) IsEmpty() bool {
+	return e == nil || e.code == "0"
+}
+
 func (e *Error) String() string {
 	return fmt.Sprintf("code=%s,source=%s,description=%s", e.Code(), e.Source(), e.Description())
 }
 
 func ToLibError(err error, code, source string) *Error {
+	if err == nil {
+		return nil
+	}
 	return NewError(code, source, err.Error())
 }
 

@@ -2,7 +2,7 @@ package app
 
 import (
 	//	"database/sql"
-	"errors"
+
 	"fmt"
 
 	"DBWorker/lib"
@@ -21,24 +21,22 @@ type DbSetup interface {
 func (db *Database) DB_Setup(file utils.FileOper, tokenPairs utils.Pairs) (err *lib.Error) {
 	//prepare file
 	fileContents, err := file.FormatContents(tokenPairs)
-	fmt.Printf("contents: %v\n", fileContents)
 	if err != nil {
-		fmt.Printf("file contents err:%v", err)
+		fmt.Printf("script error:%v\n", err)
 		return err
 	}
-	id := 13
-	name := ""
-	e := db.QueryRow("select name from sc.test_table where id=$1", id).Scan(&name)
-	if e != nil {
-		fmt.Printf("\ngot err:%v\n", e)
+	err = db.ExecuteFile(fileContents)
+	if !err.IsEmpty() {
+		return
 	}
-	fmt.Printf("\ngot value : %v\n", name)
-	//run it against psql client
-
-	//handle the results
-	return nil
+	return
 }
 
-func (d *Database) ExecuteAgainstDB(file string) error {
-	return errors.New("")
+func (d *Database) ExecuteFile(fileContents string) *lib.Error {
+	_, err := d.Exec(fileContents)
+	if err != nil {
+
+		return lib.NewError(lib.DBError, "dbsetup", fmt.Sprintf("db exe failed with %v", err))
+	}
+	return nil
 }
