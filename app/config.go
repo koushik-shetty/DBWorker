@@ -2,7 +2,6 @@ package app
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 
 	"DBWorker/lib"
@@ -13,26 +12,39 @@ type Config struct {
 }
 
 type configJSON struct {
-	dbConfig DBConfig
+	DbConfig DBConfig `json:"database"`
 }
 
-func LoadConfig(file string) (*Config, *lib.Error) {
-	file, err := ioutil.ReadAll()
-	if err != nil {
-		return lib.ToLibError(err, lib.FileError, "LoadConfig")
+func DefaultConfig() *Config {
+	return &Config{
+		dbconfig: DefaultDBConfig(),
 	}
-c:
-	&configJSON{}
+}
+
+func (c *Config) DBConfig() *DBConfig {
+	return c.dbconfig
+}
+
+func LoadConfig(filename string) (*Config, *lib.Error) {
+	if filename == "" {
+		return DefaultConfig(), nil
+	}
+	file, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, lib.ToLibError(err, lib.FileError, "LoadConfig")
+	}
+
+	c := &configJSON{}
 	err = json.Unmarshal(file, c)
 	if err != nil {
-		return lib.ToLibError(err, lib.JSONError)
+		return nil, lib.ToLibError(err, lib.JSONError, "LoadConfig")
 	}
-	return jsonToConfig(c)
+	return jsonToConfig(c), nil
 
 }
 
 func jsonToConfig(c *configJSON) *Config {
 	return &Config{
-		dbconfig: &c.dbConfig,
+		dbconfig: &c.DbConfig,
 	}
 }

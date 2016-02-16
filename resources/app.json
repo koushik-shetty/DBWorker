@@ -4,8 +4,7 @@
 		"hostname" : "localhost",
 		"dbname"  : "Kotel",
 		"schema"   : "wall",
-		"username" : "pilgrim",
-		"password" : "kvitelach",
-	},
-
+		"username" : "postgres",
+		"password" : "postgres"
+	}
 }
