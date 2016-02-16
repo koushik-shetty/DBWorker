@@ -50,7 +50,7 @@ func (ps *Pairs) ToTokens() Tokens {
 
 func (t *Tokens) stringInterpolate(src string) string {
 	for key, val := range *t {
-		src = strings.Replace(src, ":"+key, val, 1)
+		src = strings.Replace(src, ":"+key, val, -1)
 	}
 	return src
 }
