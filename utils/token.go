@@ -4,7 +4,7 @@ import (
 	r "regexp"
 	"strings"
 
-	"DBWorker/lib"
+	"github.com/koushik-shetty/DBWorker/lib"
 )
 
 const TokenExpr = "^[a-zA-Z0-9_]+:[a-zA-Z0-9_]+"

@@ -1,11 +1,12 @@
 package utils
 
 import (
-	"DBWorker/lib"
 	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
+
+	"github.com/koushik-shetty/DBWorker/lib"
 )
 
 type FileOper interface {

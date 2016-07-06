@@ -1,9 +1,11 @@
 package app_test
 
 import (
-	"DBWorker/utils"
-	"github.com/stretchr/testify"
 	"testing"
+
+	"github.com/stretchr/testify"
+
+	"github.com/koushik-shetty/DBWorker/utils"
 )
 
 func TestDBCreateMigration(t *testing.T) {

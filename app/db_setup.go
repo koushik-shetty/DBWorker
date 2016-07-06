@@ -5,13 +5,12 @@ import (
 
 	"fmt"
 
-	"DBWorker/lib"
-	"DBWorker/utils"
-
 	//	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-
 	//	"bitbucket.org/liamstask/goose/lib/goose"
+
+	"github.com/koushik-shetty/DBWorker/lib"
+	"github.com/koushik-shetty/DBWorker/utils"
 )
 
 type DbSetup interface {

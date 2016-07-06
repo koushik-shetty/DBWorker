@@ -1,10 +1,12 @@
 package app
 
 import (
-	"DBWorker/lib"
-	u "DBWorker/utils"
-	"bitbucket.org/liamstask/goose/lib/goose"
 	"time"
+
+	"bitbucket.org/liamstask/goose/lib/goose"
+
+	"github.com/koushik-shetty/DBWorker/lib"
+	u "github.com/koushik-shetty/DBWorker/utils"
 )
 
 func DBCreateMigration(file u.FileOper) (string, *lib.Error) {

@@ -1,0 +1,24 @@
+hash: 8b6338b9537370a64981e6e57eab160811376fca50a6b8c6b1f514e9196d2c7d
+updated: 2016-06-26T16:24:59.606304337+05:30
+imports:
+- name: bitbucket.org/liamstask/goose
+  version: 8488cc47d90c8a502b1c41a462a6d9cc8ee0a895
+  subpackages:
+  - /lib/goose
+- name: github.com/go-sql-driver/mysql
+  version: 3654d25ec346ee8ce71a68431025458d52a38ac0
+  repo: https://github.com/go-sql-driver/mysql
+- name: github.com/jmoiron/sqlx
+  version: bdae0c3219c3bdb92f3d7c70825018712787c933
+- name: github.com/kylelemons/go-gypsy
+  version: 42fc2c7ee9b8bd0ff636cd2d7a8c0a49491044c5
+  repo: https://github.com/kylelemons/go-gypsy
+- name: github.com/lib/pq
+  version: 4dd446efc17690bc53e154025146f73203b18309
+- name: github.com/mattn/go-sqlite3
+  version: 38ee283dabf11c9cbdb968eebd79b1fa7acbabe6
+  repo: https://github.com/mattn/go-sqlite3
+- name: github.com/ziutek/mymysql
+  version: 8787d5581eb63f3f3b447f40c13f8e69e73f1b58
+  repo: https://github.com/ziutek/mymysql
+devImports: []

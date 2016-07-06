@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	"DBWorker/lib"
+	"github.com/koushik-shetty/DBWorker/lib"
 )
 
 type Config struct {

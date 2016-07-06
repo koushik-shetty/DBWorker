@@ -1,12 +1,13 @@
 package app
 
 import (
-	"DBWorker/lib"
 	"database/sql"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+
+	"github.com/koushik-shetty/DBWorker/lib"
 )
 
 type DBConfig struct {

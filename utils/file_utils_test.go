@@ -1,10 +1,12 @@
 package utils_test
 
 import (
-	"DBWorker/utils"
-	"github.com/stretchr/testify/assert"
 	"regexp"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/koushik-shetty/DBWorker/utils"
 )
 
 func TestGetFileContentsReturnsError(t *testing.T) {

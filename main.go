@@ -1,11 +1,12 @@
 package main
 
 import (
-	"DBWorker/app"
-	"DBWorker/utils"
 	"flag"
 	"fmt"
 	"strings"
+
+	"github.com/koushik-shetty/DBWorker/app"
+	"github.com/koushik-shetty/DBWorker/utils"
 )
 
 const (
